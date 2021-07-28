@@ -1,0 +1,246 @@
+---
+title: "Nkx2-1_KO"
+author: "Puwen Tan"
+date: "2021/6/14"
+output: html_document
+---
+
+#### 1. Nkx2-1_KO
+```{r}
+library(Seurat)
+WT_matrix <- Seurat::Read10X("D:/HSC_Autophagy/3.TFKO_data/Benchmark_TF_KO/Nkx2-1_KO/WT/")
+colnames(WT_matrix) <- paste("WT_",colnames(WT_matrix),sep="")
+WT <- CreateSeuratObject(counts = WT_matrix, project = "WT")
+
+Nkx2_1_matrix <- Seurat::Read10X("D:/HSC_Autophagy/3.TFKO_data/Benchmark_TF_KO/Nkx2-1_KO/Nkx2-1_KO/")
+colnames(Nkx2_1_matrix) <- paste("Nkx2.1_KO_",colnames(Nkx2_1_matrix),sep="")
+Nkx2_1 <- CreateSeuratObject(counts = Nkx2_1_matrix, project = "Nkx2.1_KO")
+Nkx2_1_KO <- merge(x = WT, y=Nkx2_1, project = "Nkx2_1_KO")
+
+
+Nkx2_1_KO[["percent.mt"]] <- PercentageFeatureSet(Nkx2_1_KO, pattern = "^mt-")
+head(Nkx2_1_KO@meta.data, 5)
+
+plot1 <- FeatureScatter(Nkx2_1_KO, feature1 = "nCount_RNA", feature2 = "percent.mt")
+plot2 <- FeatureScatter(Nkx2_1_KO, feature1 = "nCount_RNA", feature2 = "nFeature_RNA")
+plot1 + plot2
+VlnPlot(Nkx2_1_KO, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+Nkx2_1_KO <- subset(Nkx2_1_KO, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
+
+
+Nkx2_1_KO <- NormalizeData(Nkx2_1_KO, normalization.method = "LogNormalize", scale.factor = 10000)
+Nkx2_1_KO <- FindVariableFeatures(Nkx2_1_KO, selection.method = "vst", nfeatures = 2000)
+Nkx2_1_KO <- ScaleData(Nkx2_1_KO, use.umi=T)
+Nkx2_1_KO <- RunPCA(Nkx2_1_KO, features = VariableFeatures(object = Nkx2_1_KO))
+DimPlot(Nkx2_1_KO, reduction = "pca")
+Nkx2_1_KO <- FindNeighbors(Nkx2_1_KO, dims = 1:50)
+Nkx2_1_KO <- FindClusters(Nkx2_1_KO)
+Nkx2_1_KO <- RunTSNE(object = Nkx2_1_KO, dims.use = 1:50)
+DimPlot(Nkx2_1_KO, reduction = "tsne", label = TRUE, label.size=4)
+#Cdh1---epithelial cells
+FeaturePlot(Nkx2_1_KO, reduction = "tsne",features = "Cdh1")
+FeaturePlot(Nkx2_1_KO, reduction = "tsne",features = "Nkx2-1")
+
+#Nkx2_1_KO <- RunUMAP(Nkx2_1_KO, umap.method ="uwot", dims = 1:50)
+#DimPlot(Nkx2_1_KO, reduction = "umap", label = TRUE, label.size=4)
+
+```
+#### 2.get lung epithelial cell clusters
+```{r}
+epithelial_cluster <- c(1,2,4,5,6,7,9,16,22)
+Nkx2_1_KO_epi <- Nkx2_1_KO@meta.data[Nkx2_1_KO@meta.data$seurat_clusters %in%epithelial_cluster,]
+Nkx2_1_KO_epi_counts <- as.matrix(Seurat::GetAssayData(Nkx2_1_KO, assay = "RNA", slot = "counts"))[,row.names(Nkx2_1_KO_epi)]
+write.table(Nkx2_1_KO_epi_counts,"../ext_data/Nkx2-1_KO/tSNE/Nkx2_1_KO_epithelial_cell.txt",sep="\t",quote=F)
+write.table(Nkx2_1_KO_epi@meta.data,"../ext_data/Nkx2-1_KO/tSNE/Nkx2_1_KO_epithelial_cell_metadata.txt",sep="\t",quote=F)
+
+saveRDS(Nkx2_1_KO_epi,"../ext_data/Nkx2-1_KO/tSNE/Nkx2_1_KO_epithelial_cell.rds")
+
+
+Nkx2_1_KO_epi <- CreateSeuratObject(counts = Nkx2_1_KO_epi_counts, project = "Nkx2_1_KO_epi")
+Nkx2_1_KO_epi[["percent.mt"]] <- PercentageFeatureSet(Nkx2_1_KO_epi, pattern = "^mt-")
+Nkx2_1_KO_epi <- subset(Nkx2_1_KO_epi, subset = nFeature_RNA > 200 & nFeature_RNA < 5000 & percent.mt < 10)
+VlnPlot(Nkx2_1_KO_epi, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+
+Nkx2_1_KO_epi <- NormalizeData(Nkx2_1_KO_epi, normalization.method = "LogNormalize", scale.factor = 10000)
+Nkx2_1_KO_epi <- FindVariableFeatures(Nkx2_1_KO_epi, selection.method = "vst", nfeatures = 2000)
+Nkx2_1_KO_epi <- ScaleData(Nkx2_1_KO_epi, use.umi=T)
+Nkx2_1_KO_epi <- RunPCA(Nkx2_1_KO_epi, features = VariableFeatures(object = Nkx2_1_KO_epi))
+DimPlot(Nkx2_1_KO_epi, reduction = "pca")
+Nkx2_1_KO_epi <- FindNeighbors(Nkx2_1_KO_epi, dims = 1:10)
+Nkx2_1_KO_epi <- FindClusters(Nkx2_1_KO_epi)
+Nkx2_1_KO_epi <- RunTSNE(object = Nkx2_1_KO_epi, dims.use = 1:10)
+DimPlot(Nkx2_1_KO_epi, reduction = "tsne", label = TRUE, label.size=4)
+FeaturePlot(Nkx2_1_KO_epi, reduction = "tsne",features = "Nkx2-1")
+DimPlot(Nkx2_1_KO_epi, reduction = "tsne", label = TRUE, split.by = "orig.ident",group.by = ,label.size=4)
+
+Nkx2_1_KO_epi <- RunUMAP(Nkx2_1_KO_epi, umap.method ="uwot", dims = 1:50)
+DimPlot(Nkx2_1_KO_epi, reduction = "umap", label = TRUE, label.size=4)
+FeaturePlot(Nkx2_1_KO_epi, reduction = "umap", features = "Nkx2-1", split.by = "orig.ident",label.size=4)
+
+```
+
+#### 3.Perform regulon analysis on lung cells
+
+```{r}
+atfr <- readRDS("../ext_data/Nkx2-1_KO/GRNs/GRNs_all_atfr.rds")
+GRNs(atfr)
+```
+
+```{r}
+library(dplyr)
+mu_regulon <- dorothea_regulons$mm_regulons %>% filter(confidence %in% c("A","B","C","D","E"))
+Nkx2.1_list <- dfToList(mu_regulon,"tf","target")['Nkx2-1']
+atfr <- filterRegulons(x=atfr, gene_list=Nkx2.1_list, use_grn="pcor")
+length(unlist(Regulon(atfr)))
+
+#Regulon(atfr) <- Nkx2.1_list
+
+run_time <- list()
+for (j in c("viper", "aucell", "ssgsea")){
+  st <- Sys.time()
+  atfr <- regulonActivity(atfr, method=j, ncores=1)
+  diff_time <- Sys.time()-st
+  run_time[[j]] <- diff_time
+}
+altExps(atfr)
+```
+#### 3.2 using regulons with weight gene rankings
+
+```{r}
+
+library(tidyverse)
+pantissue_network <- read_delim("D:/HSC_Autophagy/Markdown/3.scATFR/ext_data/TF_Target_data/mouse/mm_pantissue_network.txt.gz",delim = "\t",col_names = T)
+lung_tissue_network <- readRDS("D:/HSC_Autophagy/Markdown/3.scATFR/ext_data/TF_Target_data/GTEx_network.rds")$Lung
+atfr <- readRDS("../ext_data/Nkx2-1_KO/GRNs/GRNs_all_atfr.rds")
+GRNs(atfr)
+i <- "Nkx2-1"
+method <- "pidc"
+Nkx2.1_net <- pantissue_network %>% filter(tf %in% i)
+Nkx2.1_grn <- GRN(atfr,method)[i,] %>% as.matrix(.)
+
+Nkx2.1_regulon <- integerGRNs(x = Nkx2.1_grn, baseNets=Nkx2.1_net, norm_weight = FALSE, keepWeight=FALSE, keep_neg_regu = FALSE)
+
+atfr <- filterRegulons(x=atfr, gene_list=Nkx2.1_regulon, use_grn=method, maxSize =2000)
+length(unlist(Regulon(atfr)))
+
+run_time <- list()
+for (j in c("viper","aucell","ssgsea")){
+  st <- Sys.time()
+  atfr <- regulonActivity(atfr, method=j, ncores=1)
+  diff_time <- Sys.time()-st
+  run_time[[j]] <- diff_time
+}
+altExps(atfr)
+
+```
+
+#### 4. ROC
+```{r}
+#viper
+mat <- assay(altExp(atfr,e = "viper"))
+mat <- assay(altExp(atfr,e = "aucell"))
+mat <- assay(altExp(atfr,e = "ssgsea"))
+
+labels <- colData(atfr)[['orig.ident']]
+names(labels) <- row.names(colData(atfr))
+label <- ifelse(labels=="WT",1,-1)
+prediction <- mat[1,names(labels)]*(-1)
+pred <- ROCR::prediction(predictions = prediction, labels = label)
+perf <- ROCR::performance(pred,"auc")
+perf@y.values
+perf <- ROCR::performance(pred,"tpr", "fpr")
+
+plot(perf,avg="threshold",spread.estimate="boxplot")
+
+```
+
+### 5 Running SCENIC with Nkx2-ko data
+
+```{r}
+library(GENIE3)
+library(RcisTarget)
+library(AUCell)
+library(data.table)
+
+hs_motif_ranking <- importRankings("../ext_data/cisTarget_databases/hg38__refseq-r80__500bp_up_and_100bp_down_tss.mc9nr.feather")
+hs_annotation <- fread("../ext_data/cisTarget_databases/motifs-v9-nr.hgnc-m0.001-o0.0.tbl",sep="\t")
+mm_motifranking <- importRankings("../ext_data/cisTarget_databases/mm10__refseq-r80__500bp_up_and_100bp_down_tss.mc9nr.feather")
+mm_annotation <- data.table::fread("../ext_data/cisTarget_databases/motifs-v8-nr.mgi-m0.001-o0.0.tbl",sep="\t")
+
+atfr <- readRDS("../ext_data/Nkx2-1_KO/GRNs/GRNs_all_atfr.rds")
+exprMatr <- assay(atfr)
+grn_tab <- GRN(atfr,"genie3")['Nkx2-1',]
+grn_frm <- GENIE3::getLinkList(as.matrix(grn_tab),threshold = 0)
+top_num <- round(0.05*ncol(grn_tab))
+grn_frm <- grn_frm %>% group_by(regulatoryGene) %>% top_n(top_num,weight)
+grn_list <- split(grn_frm$targetGene,as.character(grn_frm$regulatoryGene))
+
+grn_cistarget_res <- cisTarget(geneSets = grn_list,motifRankings = mm_motifranking, motifAnnot = mm_annotation, highlightTFs='Nkx2-1',nesThreshold = 0)
+grn_cistarget <- grn_cistarget_res[TFinDB=="**",][enrichedGenes!="",]
+grn_targets <- unique(unlist(strsplit(grn_cistarget[["enrichedGenes"]],split="\\;")))
+grn_regulon <- split(grn_targets,'Nkx2-1')
+
+#---get expression ranks
+cells_rankings <- AUCell_buildRankings(exprMatr, nCores=1, plotStats=FALSE)
+cells_AUC <- AUCell_calcAUC(geneSets=grn_regulon, rankings = cells_rankings,normAUC = TRUE)
+auc_value <- getAUC(cells_AUC)
+saveRDS(auc_value,"../ext_data/Nkx2-1_KO/SCENIC/AUC_value.rds")
+
+#------performance
+mat <- auc_value
+
+labels <- colData(atfr)[['orig.ident']]
+names(labels) <- row.names(colData(atfr))
+label <- ifelse(labels=="WT",1,-1)
+prediction <- mat[1,names(labels)]*(-1)
+pred <- ROCR::prediction(predictions = prediction, labels = label)
+perf <- ROCR::performance(pred,"auc")
+perf@y.values
+perf <- ROCR::performance(pred,"tpr", "fpr")
+
+plot(perf,
+     avg="threshold",
+     spread.estimate="boxplot")
+
+
+```
+
+
+#### 6. running dorothera
+
+
+```{r}
+atfr <- readRDS("../ext_data/Nkx2-1_KO/GRNs/GRNs_all_atfr.rds")
+PIDC_res <- readRDS("../ext_data/Nkx2-1_KO/GRNs/Nkx2-1_KO_PIDC_GRNs.rds")
+GRN(atfr,"pidc") <- PIDC_res
+saveRDS(atfr,"../ext_data/Nkx2-1_KO/GRNs/GRNs_all_atfr.rds")
+
+library(dorothea)
+regulons <- dorothea_mm %>% dplyr::filter(tf %in% 'Nkx2-1')
+logcounts(atfr) <- log2(counts(atfr)+1)
+atfr <- run_viper(atfr, regulons, options =  list(method = "scale", minsize = 4, 
+                                                  eset.filter = FALSE, cores = 1, verbose = TRUE))
+tf_activities <- assay(altExp(atfr,"dorothea"))
+
+labels <- colData(atfr)[['orig.ident']]
+names(labels) <- row.names(colData(atfr))
+label <- ifelse(labels=="WT",1,-1)
+prediction <- tf_activities['Nkx2-1',names(labels)]*(-1)
+pred <- ROCR::prediction(predictions = prediction, labels = label)
+perf <- ROCR::performance(pred, "auc")
+perf@y.values
+perf <- ROCR::performance(pred,"tpr", "fpr")
+
+plot(perf,
+     avg="threshold",
+     spread.estimate="boxplot")
+
+mat_ata <-data.frame(t(mat),t(tf_activities),check.rows = T)
+
+```
+
+
+
+
+
+
