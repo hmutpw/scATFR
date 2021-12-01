@@ -1,7 +1,7 @@
 Package: scATFR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.4
+Title: single-cell Activate Transcription Factor Regulon analysis tools
+Version: 0.1.9
 Author: Puwen Tan
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
@@ -25,4 +25,20 @@ Depends:
     fgsea,
     RcisTarget,
     scLink,
-    ppcor
+    ppcor,
+    purrr,
+    dplyr,
+    qvalue,
+    jaccard,
+    scater,
+    AUCell,
+    PIDC,
+    ROCR,
+    Radviz,
+    cvTools,
+    factoextra,
+    glmnet,
+    kSamples,
+    pbapply,
+    progress,
+    stringr

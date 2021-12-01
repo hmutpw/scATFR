@@ -4,7 +4,7 @@
 \alias{dfToList}
 \title{Transform data.frame to gene list}
 \usage{
-dfToList(df, tf_col, target_col)
+dfToList(df, tf_col = "tf", target_col = "target")
 }
 \arguments{
 \item{df}{A data.frame with TF and it's target information.}

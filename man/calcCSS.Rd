@@ -4,20 +4,39 @@
 \alias{calcCSS}
 \title{Identifying cell-type specific transcription factor regulons}
 \usage{
-calcCSS(mat, cell_anno, pos_clust, neg_clust = NULL, nperm = 1000, ncores = 1)
+calcCSS(
+  mat,
+  pos_cells,
+  use_cluster = NULL,
+  neg_cells = NULL,
+  scale = FALSE,
+  nperm = 1000,
+  ncores = 1,
+  verbose = interactive()
+)
 }
 \arguments{
-\item{mat}{A \code{matrix} contains transcription factor regulons activate score.}
+\item{mat}{A numeric \code{matrix} contains transcription factor regulons activate score.}
 
-\item{cell_anno}{A two-column \code{data.frame} with cell name and cell cluster or cell (or stage) information.}
+\item{pos_cells}{Cells from the cluster(s) to calculate the cell-type specific
+score. It must be included in column names of mat.}
 
-\item{pos_clust}{Character, cluster used to calculate the cell-type specific score (CSS).}
+\item{use_cluster}{The cluster used for cell-type specific calculation.
+Default: NULL.}
 
-\item{neg_clust}{Other clusters used as controls. Default: NULL (indicating all clusters expect for 'pos_clust').}
+\item{neg_cells}{Cells from the control cluster(s) to calculate the cell-type
+specific score. It must be included in column names of mat. Default: NULL,
+all cells expect for pos_cells.}
 
-\item{nperm}{Number of permutations used for calculating p-values against CSS. Default:1000.}
+\item{scale}{Whether to scale values for calculation. If the activate scores
+have negative values, it must be scaled. Default: FALSE.}
+
+\item{nperm}{Number of permutations used for calculating p-values against CSS.
+Default:1000.}
 
 \item{ncores}{Number of threads used for parallel calculation. Default: 1.}
+
+\item{verbose}{Whether to output message? Default: TRUE.}
 }
 \value{
 A \code{data.frame} with differential CSS for each TFRs.

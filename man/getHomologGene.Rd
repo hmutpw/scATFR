@@ -16,7 +16,7 @@ getHomologGene(
 \item{input_gene}{Input genes, which can be gene symbols or entrez gene ids.}
 
 \item{input_tax}{Input gene taxonomy id or names. To browse the available organisms,
-please use \code{\link{browserTaxonomy()}}}
+please use \code{\link{browserTaxonomy()}}.}
 
 \item{output_tax}{Output gene taxonomy id or names. To browse the available organisms,
 please use \code{\link{browserTaxonomy()}}}

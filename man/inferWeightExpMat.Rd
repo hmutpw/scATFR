@@ -6,10 +6,10 @@
 \usage{
 inferWeightExpMat(
   exp_mat,
-  method = c("genie3", "pidc", "pcor", "sincerities"),
+  method = c("pcor", "pidc", "genie3", "sincerities"),
   use_regulator = NULL,
+  exp_cutoff = 0,
   col_time = NULL,
-  filter_genes = TRUE,
   ncores = 1,
   verbose = interactive(),
   ...
@@ -20,18 +20,17 @@ inferWeightExpMat(
 
 \item{method}{Methods used for weighted matrix calculation. Current version only
 support four types of methods. The "genie3" for \code{\link{GENIE3}} method from package \code{\link{GENIE3}}.
-The "sclink" for package \code{\link{sclink}}. The "pcor" for \code{\link{ppcor}} package. The "spearman",
-were common used method in \code{\link{cor()}} function.}
+The "pcor" for \code{\link{ppcor}} package. The "spearman", were common used method in \code{\link{cor()}} function.}
 
 \item{use_regulator}{Regulators used for weighted matrix calculation, usually TFs. Default: NULL, stands for all
 genes were used.}
+
+\item{exp_cutoff}{Numeric. The number or percentage of cells expressed for each gene. Default: 1, at least one cell.}
 
 \item{col_time}{A two columns data.frame. The first column must be sample names which should be identical
 with sample names in \code{exp_mat}. The second column must be time points for each sample which should
 be numeric (eg. 0, 12, 24, 48). If you do not have exactly time information for your cell types, you can
 just set time points from zero (eg. 0, 1, 2, 3, 4, ...). Note: at least 3 time points needed.}
-
-\item{filter_genes}{Filtering low expressed genes before analysis. Default: TRUE.}
 
 \item{ncores}{Number of cores used for parallel calculation. Using \code{\link{parallel::detectCores()}}
 to detect the cores on your computer.Default: 1.}

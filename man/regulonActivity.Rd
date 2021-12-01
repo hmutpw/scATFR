@@ -3,19 +3,19 @@
 \name{regulonActivity,SingleCellExperiment-method}
 \alias{regulonActivity,SingleCellExperiment-method}
 \alias{regulonActivity,matrix-method}
-\alias{regulonActivity,ExpressionSet-method}
-\alias{regulonActivity,Seurat-method}
 \title{Performing regulon activity evaluation}
 \usage{
 \S4method{regulonActivity}{SingleCellExperiment}(
   x,
   gene_list = NULL,
-  method = c("viper", "aucell", "ssgsea", "gsva"),
+  method = c("viper", "aucell", "ssgsea"),
   normalization = TRUE,
   min_target_num = 5L,
   max_target_num = 500L,
   use_assay = 1L,
   use_regulon = 1L,
+  norm_act = FALSE,
+  norm_coe = 1,
   ncores = 1,
   verbose = FALSE,
   ...
@@ -24,35 +24,12 @@
 \S4method{regulonActivity}{matrix}(
   x,
   gene_list,
-  method = c("viper", "aucell", "gsva", "ssgsea", "zscore", "plage"),
+  method = c("viper", "ssgsea", "aucell"),
   normalization = TRUE,
   min_target_num = 5,
   max_target_num = 500,
-  ncores = 1,
-  verbose = FALSE,
-  ...
-)
-
-\S4method{regulonActivity}{ExpressionSet}(
-  x,
-  gene_list,
-  method = c("viper", "aucell", "gsva", "ssgsea", "zscore", "plage"),
-  normalization = TRUE,
-  min_target_num = 5,
-  max_target_num = 500,
-  ncores = 1,
-  verbose = FALSE,
-  ...
-)
-
-\S4method{regulonActivity}{Seurat}(
-  x,
-  gene_list,
-  method = c("viper", "aucell", "gsva", "ssgsea", "zscore", "plage"),
-  normalization = TRUE,
-  min_target_num = 5,
-  max_target_num = 500,
-  use_assay = 1L,
+  scale_act = FALSE,
+  scale_coe = 10,
   ncores = 1,
   verbose = FALSE,
   ...
@@ -75,6 +52,12 @@ should be Transcription Factors(TFs).}
 
 \item{use_assay}{For object with \code{SummarizedExperiment} class, the use_assay
 argument can be used to select the assay containing the expression data we want as input.}
+
+\item{use_regulon}{The regulon assay used for activity estimation. Default: 1, the first one.}
+
+\item{norm_act}{Whether to scale the activity score? Default: FALSE.}
+
+\item{norm_coe}{The coefficient used for activity score normalization.}
 
 \item{ncores}{Number of threads used for parallel calculation. Default: 1.}
 

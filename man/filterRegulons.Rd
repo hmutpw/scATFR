@@ -15,7 +15,8 @@
   minSize = 5L,
   maxSize = 500L,
   filter_pval = 1L,
-  ncores = 1
+  ncores = 1,
+  ...
 )
 }
 \arguments{

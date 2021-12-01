@@ -6,8 +6,11 @@
 \usage{
 do_RadvizFeaturePlot(
   rv,
-  use_feature,
+  use_feature = NULL,
   outline_circle = TRUE,
+  point_size = 1,
+  point_alpha = 0.8,
+  point_shape = 16,
   plot_type = c("point", "hexagonal"),
   colors = scale_color_gradient(low = "grey80", high = "dodgerblue4"),
   text_size = 8

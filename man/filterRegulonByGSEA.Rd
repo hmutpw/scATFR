@@ -9,9 +9,9 @@ filterRegulonByGSEA(
   grn_tab,
   score_type = c("std", "pos", "neg"),
   normalize = FALSE,
-  withWeight = TRUE,
+  withWeight = FALSE,
   minSize = 5L,
-  maxSize = 1000L,
+  maxSize = 500L,
   filter_pval = 1L,
   ncores = 1
 )

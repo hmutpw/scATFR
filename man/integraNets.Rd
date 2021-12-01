@@ -8,34 +8,65 @@ integraNets(
   grnNets,
   weight = rep(1, length(grnNets)),
   norm_weight = FALSE,
-  keep_neg_regu = TRUE,
+  keep_neg_regu = FALSE,
   join_type = c("full", "inner", "left", "right"),
+  return_sig = FALSE,
+  max_target_num = 5000L,
+  min_target_num = 100L,
+  regulon_list = FALSE,
   beta0 = 0,
+  maxInter = 1,
+  ncores = 1,
   verbose = interactive()
 )
 }
 \arguments{
-\item{grnNets}{A list of weighted regulator-target regulatory networks from different
-resources, for example: motif prediction, Chip-seq and Knockout experiment. For each
-network in the list, there must three columns corresponding to regulator, target and
-weight, respectively. If one of your network do not have weight, you can set 1 to all
-the regulator-target pairs in `weight` column.}
+\item{grnNets}{List. A list of weighted regulator-targets networks from
+different resources, for example: motif prediction, Chip-seq and Knockout
+experiment. For every network in this list, three columns corresponding to
+regulator, target and weight must be offered. If one of your network do not
+have weights, you can set 1 to all the regulator-target pairs in 3-rd column.}
 
-\item{weight}{Positive number. Specific the weight of resources. default: 1}
+\item{weight}{Numeric vector. Positive numbers of the same length with
+\code{grnNets} specific the weight from each resource. default: 1.}
 
-\item{norm_weight}{Whether to normalize the weight to [0,1] of regulator-target pairs
-from each resource. Default: FALSE}
+\item{norm_weight}{Logical. Whether to normalize the weight to [0,1] of
+regulator-target pairs from each resource. Default: FALSE.}
 
-\item{keep_neg_regu}{Whether to keep negative regulatory relationships between regulators
-and targets. Default: TRUE.}
+\item{keep_neg_regu}{Logical. Whether to keep negative regulatory
+relationships between regulator and targets. Default: FALSE.}
 
-\item{join_type}{The merge types among different data frames. Default:full.}
+\item{join_type}{Character. The merge types among different \code{data.frame},
+corresponding to \code{\link{full_join}}, \code{\link{inner_join}},
+\code{\link{left_join}} and \code{\link{right_join}} methods in \pkg{dplyr}.
+Default: full.}
+
+\item{return_sig}{Logical. Only return top weighted regulatory networks?
+Default: FALSE.}
+
+\item{max_target_num}{Numeric. Set the maximum number for secondly filtering.
+Number over this value will filter for multiple times. Default: 5000.}
+
+\item{min_target_num}{Numeric. Set the minimum cutoff numbers of targets from
+each regulator for filtering. Number under this value will not filter.
+Default: 100.}
+
+\item{regulon_list}{Logical. Return a \code{list} of regulons or a
+\code{data.frame} with networks. Default: \code{data.frame}.}
 
 \item{beta0}{Numeric. The sparsity parameter.}
+
+\item{maxInter}{Maximum number of iteration.}
+
+\item{ncores}{Number of cores use. Default: 1.}
+
+\item{verbose}{Whether to show information?}
 }
 \value{
-A data.frame with integrated weighted regulator-target regulatory networks
+A \code{data.frame} with integrated weighted regulator-target
+regulatory networks.
 }
 \description{
-Integrating weighted regulator-target regulatory networks
+This method integrate weighted regulatory networks from different resources
+and filter the top ranked regulatory-target pairs for further analysis.
 }

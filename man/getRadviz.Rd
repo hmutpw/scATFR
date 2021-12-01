@@ -8,10 +8,12 @@ getRadviz(
   input_frm,
   anchors = colnames(input_frm),
   trim_ratio = 0.005,
+  norm_data = TRUE,
   optim_anchor = TRUE,
   recenter = NULL,
   text_color = "orangered4",
   text_size = 8,
+  verbose = interactive(),
   ...
 )
 }
@@ -26,14 +28,14 @@ getRadviz(
 
 \item{recenter}{User defined start anchor.}
 
+\item{text_color}{Text color, inherited from \code{\link{do.radviz}}.}
+
+\item{text_size}{Text size, inherited from \code{\link{do.radviz}}.}
+
 \item{...}{Other parameters passed to \code{\link{do.radviz}}.}
-
-\item{label_col}{Label color, inherited from \code{\link{do.radviz}}.}
-
-\item{label_size}{Label size, inherited from \code{\link{do.radviz}}.}
 }
 \value{
-
+getRadviz object
 }
 \description{
 getRadviz object

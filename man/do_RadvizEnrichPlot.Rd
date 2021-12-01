@@ -9,9 +9,9 @@ do_RadvizEnrichPlot(
   color_by = NULL,
   outline_circle = TRUE,
   plot_type = c("point", "density", "hexagonal", "buble"),
-  text_size = 8,
-  label_size = 0.5,
-  label_shape = 16,
+  point_size = 0.5,
+  point_shape = 16,
+  alpha = 1,
   ...
 )
 }
@@ -24,13 +24,13 @@ do_RadvizEnrichPlot(
 
 \item{plot_type}{Figure types to plot.}
 
-\item{text_size}{Text size.}
+\item{point_size}{Label size of point in \code{\link{geom_point()}}.}
 
-\item{label_size}{Label size of point in \code{\link{geom_point()}}.}
-
-\item{label_shape}{Label shape of point in \code{\link{geom_point()}}.}
+\item{point_shape}{Label shape of point in \code{\link{geom_point()}}.}
 
 \item{...}{Other input parameters.}
+
+\item{text_size}{Text size.}
 }
 \value{
 a ggplot object
