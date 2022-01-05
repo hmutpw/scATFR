@@ -8,8 +8,8 @@ setGeneric("inferGRNs", function(x, ...) standardGeneric("inferGRNs"))
 #' @param use_assay Assay used for GRN inferring, can be \code{numeric} or
 #' \code{character} with assay names. Default:1,  the first assay.
 #' @param method Methods used for weighted GRN inferring. Current version support
-#' four types of methods: \code{\link{PIDC}}, \code{\link{GENIE3}},
-#' \code{\link{PCOR}} and \code{\link{SINCERITIES}}. Default: pidc.
+#' four types of methods: \code{\link{PUIC}}, \code{\link{GENIE3}},
+#' \code{\link{PCOR}} and \code{\link{SINCERITIES}}. Default: puic.
 #' @param use_regulator Regulators used for weighted GRN inferring, eg. TFs.
 #' Default: NULL, all genes in rows.
 #' @param use_target Targets used for weighted GRN inferring. Default: NULL, 
@@ -28,7 +28,7 @@ setGeneric("inferGRNs", function(x, ...) standardGeneric("inferGRNs"))
 #' @rdname inferGRNs
 #' @export
 setMethod("inferGRNs", "matrix", function(x,
-                                          method = c("pidc", "genie3", "pcor", "sincerities"),
+                                          method = c("puic", "genie3", "pcor", "sincerities"),
                                           use_regulator = NULL,
                                           use_target = NULL,
                                           time_col = NULL,
@@ -69,7 +69,7 @@ setMethod("inferGRNs", "matrix", function(x,
 #' @export
 setMethod("inferGRNs", "SingleCellExperiment", function(x,
                                                         use_assay = 1L,
-                                                        method = c("pidc","genie3", "pcor", "sincerities"),
+                                                        method = c("puic","genie3", "pcor", "sincerities"),
                                                         use_regulator = NULL,
                                                         use_target = NULL,
                                                         time_col = NULL,
@@ -141,11 +141,11 @@ setMethod("inferGRNs", "SingleCellExperiment", function(x,
 #' @importFrom GENIE3 GENIE3
 #' @importFrom scLink sclink_cor sclink_norm
 #' @importFrom parallel makeCluster clusterExport parSapply stopCluster
-#' @importFrom PIDC PIDC
+#' @importFrom PUIC PUIC
 #'
 #' @export
 inferWeightExpMat <- function(exp_mat,
-                              method = c("pcor", "pidc", "genie3", "sincerities"),
+                              method = c("puic", "genie3", "pcor", "sincerities"),
                               use_regulator = NULL,
                               exp_cutoff = 0,
                               col_time = NULL,
@@ -184,8 +184,8 @@ inferWeightExpMat <- function(exp_mat,
   }
   ##########
   #------start calculate GRNs
-  if(method == "pidc"){
-    cor_mat <- PIDC::PIDC(expMat = exp_mat, regulators = use_regulator, 
+  if(method == "puic"){
+    cor_mat <- PUIC::PUIC(expMat = exp_mat, regulators = use_regulator, 
                           ncores = ncores, verbose = verbose, ...)
   }else if(method == "genie3"){
     #---GENIE3

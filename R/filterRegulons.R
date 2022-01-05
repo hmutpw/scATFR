@@ -3,7 +3,7 @@ setGeneric("filterRegulons", function(x, ...) standardGeneric("filterRegulons"))
 
 #' Filtering Transcription factor regulons using Gene regulon networks
 #'
-#' @param x A \code{SingleCellExperiment} or \code{Seurat} object.
+#' @param x A \code{SingleCellExperiment} object.
 #' @param gene_list The regulon list used for filtering. default: NULL(use GRNs in your object).
 #' @param grn_mat The gene regulatory network used for filtering.
 #' @param use_regulon Regulons used for filtering.

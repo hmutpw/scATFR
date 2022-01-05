@@ -118,6 +118,7 @@ setMethod("runSCENIC", "SingleCellExperiment", function(x,
 #' method.
 #' @param motif_annotation The motif annotation database containing the 
 #' annotations of the motif to transcription factors.
+#' @param return_grn_only Only return the gene regulons, not calculating the AUC value.
 #' @param top_fraction The percentage of top ranked targets used for initial 
 #' regulon analysis. Default: 0.05.
 #' @param nesThreshold The normalized enrichment score for motif enrichment result. 
@@ -142,6 +143,7 @@ runSCENICMethod <- function(exprMatr,
                             grn_tab,
                             motif_ranking,
                             motif_annotation,
+                            return_grn_only = FALSE,
                             top_fraction=0.05,
                             nesThreshold=0L,
                             minSize = 5L,
@@ -185,6 +187,7 @@ runSCENICMethod <- function(exprMatr,
   grn_regulon_num <- sapply(grn_regulon, length)
   grn_regulon <- grn_regulon[names(grn_regulon_num[which(grn_regulon_num>=minSize)])]
   grn_regulon <- grn_regulon[names(grn_regulon_num[which(grn_regulon_num<=maxSize)])]
+  if(return_grn_only) return(grn_regulon)
   #3. runing AUCell
   if(verbose) message("[2] Runing AUCell...")
   suppressMessages(suppressWarnings(

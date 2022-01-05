@@ -120,9 +120,47 @@ importFromSeurat <- function(object,
 }
 
 
-
-
-
-
-
-
+#' Importing from 10X genomics data
+#'
+#' @param path The directory of 10X genomics output.
+#'
+#' @return An object.
+#' 
+#' @importFrom Matrix readMM
+#' @importFrom SingleCellExperiment SingleCellExperiment
+#' 
+#' @export
+#'
+import10XGenomics <- function(path){
+  matrix <- list.files(path = path, pattern = "^matrix")
+  features <- list.files(path = path, pattern = "^features")
+  barcodes <- list.files(path = path, pattern = "^barcodes")
+  #---check files
+  if(length(matrix) == 0){
+    stop("The 'matrix.mtx' is not found in you path:", path)
+  }else if(length(matrix) >1 ){
+    warning("There are more than one 'matrix.mtx' found in you path, only using the first one!")
+    matrix <- matrix[1]
+  }
+  if(length(features) == 0){
+    stop("The 'features.tsv' is not found in you path:", path)
+  }else if(length(features) >1 ){
+    warning("There are more than one 'features.tsv' found in you path, only using the first one!")
+    features <- features[1]
+  }
+  if(length(barcodes) == 0){
+    stop("The 'barcodes.tsv' is not found in you path:", path)
+  }else if(length(barcodes) >1 ){
+    warning("There are more than one 'barcodes.tsv' found in you path, only using the first one!")
+    barcodes <- barcodes[1]
+  }
+  #---load data
+  mtx_data <- Matrix::readMM(file = file.path(path, matrix))
+  feature_data <- read.delim(file = file.path(path, features), header = FALSE, sep = "\t", stringsAsFactors=FALSE, quote="", comment.char="")
+  colnames(feature_data)[1:2] <- c("gene_id","gene_name")
+  barcode_data <- readLines(con = file.path(path, barcodes))
+  colnames(mtx_data) <- barcode_data
+  row.names(mtx_data) <- feature_data$gene_name
+  sce <- SingleCellExperiment::SingleCellExperiment(list(counts = mtx_data), rowData = feature_data)
+  sce
+}

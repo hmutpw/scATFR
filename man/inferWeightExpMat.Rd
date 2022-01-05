@@ -6,7 +6,7 @@
 \usage{
 inferWeightExpMat(
   exp_mat,
-  method = c("pcor", "pidc", "genie3", "sincerities"),
+  method = c("puic", "genie3", "pcor", "sincerities"),
   use_regulator = NULL,
   exp_cutoff = 0,
   col_time = NULL,

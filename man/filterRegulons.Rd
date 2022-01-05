@@ -20,7 +20,7 @@
 )
 }
 \arguments{
-\item{x}{A \code{SingleCellExperiment} or \code{Seurat} object.}
+\item{x}{A \code{SingleCellExperiment} object.}
 
 \item{gene_list}{The regulon list used for filtering. default: NULL(use GRNs in your object).}
 

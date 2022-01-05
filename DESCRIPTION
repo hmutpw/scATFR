@@ -32,7 +32,7 @@ Depends:
     jaccard,
     scater,
     AUCell,
-    PIDC,
+    PUIC,
     ROCR,
     Radviz,
     cvTools,

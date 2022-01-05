@@ -7,7 +7,7 @@
 \usage{
 \S4method{inferGRNs}{matrix}(
   x,
-  method = c("pidc", "genie3", "pcor", "sincerities"),
+  method = c("puic", "genie3", "pcor", "sincerities"),
   use_regulator = NULL,
   use_target = NULL,
   time_col = NULL,
@@ -18,7 +18,7 @@
 \S4method{inferGRNs}{SingleCellExperiment}(
   x,
   use_assay = 1L,
-  method = c("pidc", "genie3", "pcor", "sincerities"),
+  method = c("puic", "genie3", "pcor", "sincerities"),
   use_regulator = NULL,
   use_target = NULL,
   time_col = NULL,
@@ -32,11 +32,14 @@ following types: \code{\link{matrix}} and an object of
 \code{\link{SingleCellExperiment}}.}
 
 \item{method}{Methods used for weighted GRN inferring. Current version support
-four types of methods: \code{\link{PIDC}}, \code{\link{GENIE3}},
-\code{\link{PCOR}} and \code{\link{SINCERITIES}}. Default: pidc.}
+four types of methods: \code{\link{PUIC}}, \code{\link{GENIE3}},
+\code{\link{PCOR}} and \code{\link{SINCERITIES}}. Default: puic.}
 
 \item{use_regulator}{Regulators used for weighted GRN inferring, eg. TFs.
 Default: NULL, all genes in rows.}
+
+\item{use_target}{Targets used for weighted GRN inferring. Default: NULL, 
+all genes in rows.}
 
 \item{time_col}{A numeric \code{vector} or a one column \code{data.frame}
 contains time points for each sample. If the input object x is a

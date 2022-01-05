@@ -9,6 +9,7 @@ runSCENICMethod(
   grn_tab,
   motif_ranking,
   motif_annotation,
+  return_grn_only = FALSE,
   top_fraction = 0.05,
   nesThreshold = 0L,
   minSize = 5L,
@@ -29,6 +30,8 @@ method.}
 
 \item{motif_annotation}{The motif annotation database containing the 
 annotations of the motif to transcription factors.}
+
+\item{return_grn_only}{Only return the gene regulons, not calculating the AUC value.}
 
 \item{top_fraction}{The percentage of top ranked targets used for initial 
 regulon analysis. Default: 0.05.}

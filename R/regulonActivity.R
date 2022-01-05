@@ -24,7 +24,7 @@ setGeneric("regulonActivity", function(x, ...) standardGeneric("regulonActivity"
 #' @return
 #'
 #'
-# SingleCellExperiment
+
 #' @rdname regulonActivity
 #' @export
 setMethod("regulonActivity", "SingleCellExperiment", function(x,
@@ -88,7 +88,7 @@ setMethod("regulonActivity", "matrix", function(x,
                                                 normalization = TRUE,
                                                 min_target_num = 5,
                                                 max_target_num = 500,
-                                                scale_act = FALSE,
+                                                norm_act = FALSE,
                                                 scale_coe = 10,
                                                 ncores = 1,
                                                 verbose = FALSE,
